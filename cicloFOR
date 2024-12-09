@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<body>
+    <h2>Inserisci un numero</h2>
+    <input type="number" id="numero">
+    <button onclick="calcola()">Calcola</button>
+    
+    <div id="risultato"></div>
+
+    <script>
+        function calcola() {
+            var numero = document.getElementById("numero").value;
+            var risultato = "";
+            for (var i = 0; i <= numero; i++) {
+                risultato += i + "-" + (numero - i) + "<br>";
+            }
+            document.getElementById("risultato").innerHTML = risultato;
+        }
+    </script>
+</body>
+</html>
