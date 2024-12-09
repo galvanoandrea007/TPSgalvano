@@ -8,9 +8,9 @@
 
     <script>
         function calcola() {
-            var numero = document.getElementById("numero").value;
-            var risultato = "";
-            for (var i = 0; i <= numero; i++) {
+            let numero = document.getElementById("numero").value;
+            let risultato = "";
+            for (let i = 0; i <= numero; i++) {
                 risultato += i + "-" + (numero - i) + "<br>";
             }
             document.getElementById("risultato").innerHTML = risultato;
