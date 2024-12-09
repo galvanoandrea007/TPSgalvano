@@ -1,48 +1,43 @@
 <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equazione di secondo grado</title>
+</head>
 <body>
-    <h2>Inserisci i dati</h2>
-    
-    <form>
-        Nome: <input type="text" id="nome"><br><br>
-        Cognome: <input type="text" id="cognome"><br><br>
-        Indirizzo: <input type="text" id="indirizzo"><br><br>
-        Città: <input type="text" id="citta"><br><br>
-        <button type="button" onclick="inserisciDati()">Inserisci</button>
+    <h2>Calcola le radici di un'equazione di secondo grado</h2>
+    <form id="equazioneForm">
+        <label for="a">Coefficiente a:</label>
+        <input type="number" id="a" required><br><br>
+
+        <label for="b">Coefficiente b:</label>
+        <input type="number" id="b" required><br><br>
+
+        <label for="c">Coefficiente c:</label>
+        <input type="number" id="c" required><br><br>
+
+        <button type="button" onclick="calcolaRadici()">Calcola</button>
     </form>
 
-    <h3>Dati Inseriti:</h3>
-    <table border="1" id="tabella">
-        <tr>
-            <th>Nome</th>
-            <th>Cognome</th>
-            <th>Indirizzo</th>
-            <th>Città</th>
-        </tr>
-    </table>
+    <h3 id="risultato"></h3>
 
     <script>
-        var matrice = [];
+        function calcolaRadici() {
+            let a = parseFloat(document.getElementById("a").value);
+            let b = parseFloat(document.getElementById("b").value);
+            let c = parseFloat(document.getElementById("c").value);
 
-        function inserisciDati() {
-            var nome = document.getElementById("nome").value;
-            var cognome = document.getElementById("cognome").value;
-            var indirizzo = document.getElementById("indirizzo").value;
-            var citta = document.getElementById("citta").value;
+            let delta = b * b - 4 * a * c;
+            let risultato = document.getElementById("risultato");
 
-            matrice.push([nome, cognome, indirizzo, citta]);
-
-            var tabella = document.getElementById("tabella");
-            var nuovaRiga = tabella.insertRow();
-
-            for (var i = 0; i < 4; i++) {
-                var cella = nuovaRiga.insertCell(i);
-                cella.innerHTML = matrice[matrice.length - 1][i];
+            if (delta < 0) {
+                risultato.innerHTML = "L'equazione non ha soluzioni reali.";
+            } else {
+                let x1 = (-b + Math.sqrt(delta)) / (2 * a);
+                let x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                risultato.innerHTML = "Le radici sono: x1 = " + x1 + " e x2 = " + x2;
             }
-
-            document.getElementById("nome").value = "";
-            document.getElementById("cognome").value = "";
-            document.getElementById("indirizzo").value = "";
-            document.getElementById("citta").value = "";
         }
     </script>
 </body>
