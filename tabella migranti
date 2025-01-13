@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+  <html>
+<head>
+      <title>Carica e Visualizza File</title>
+</head>
+<body>
+      <h1>Carica un file di testo</h1>
+      <input type="file" id="fileInput">
+    <table id="table" border="1"></table>
+  
+      <script>
+          document.getElementById('fileInput').addEventListener('change', function(event) {
+              var file = event.target.files[0];
+            var reader = new FileReader();
+
+              reader.onload = function() {
+                var lines = reader.result.split('\n');
+                  var table = document.getElementById('table');
+                table.innerHTML = '';  
+
+                lines.forEach(function(line) {
+                      var row = table.insertRow();
+                    var cells = line.split(/\s+/); 
+                    cells.forEach(function(cell) {
+                        var cellElement = row.insertCell();
+                        cellElement.textContent = cell;
+                    });
+                     });
+              };
+
+             reader.readAsText(file);
+          });
+     </script>
+ </body>
+</html>
