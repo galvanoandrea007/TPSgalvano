@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+     <canvas id="myCanvas" width="400" height="400"></canvas>
+
+    <script>
+
+        const canvas = document.getElementById("myCanvas");
+         const ctx = canvas.getContext("2d");
+
+
+         function drawStar(cx, cy, spikes, radius) {
+              const step = Math.PI * 2 / spikes;
+              const rotationOffset = -Math.PI / 2; 
+            const points = [];
+
+
+               for (let i = 0; i < spikes; i++) {
+                const x = cx + Math.cos(i * step + rotationOffset) * radius;
+                  const y = cy + Math.sin(i * step + rotationOffset) * radius;
+                points.push({ x, y });
+               }
+
+
+             ctx.beginPath();
+            for (let i = 0; i < spikes; i++) {
+                 const nextIndex = (i * 2) % spikes; 
+                ctx.lineTo(points[nextIndex].x, points[nextIndex].y);
+              }
+             ctx.closePath(); 
+            ctx.strokeStyle = "black"; 
+               ctx.lineWidth = 1;
+             ctx.stroke();
+           }
+
+
+        drawStar(200, 200, 5, 100);
+    </script>
+</body>
+</html>
