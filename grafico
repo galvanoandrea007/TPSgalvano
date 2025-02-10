@@ -1,0 +1,95 @@
+ <!DOCTYPE html>
+  <html lang="it">
+   <head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Grafico Sbarchi</title>
+     <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+   </head>
+   <body>
+     <canvas id="grafico" width="800" height="400"></canvas>
+    <script>
+       
+        const dati = [
+              { anno: 1997, sbarchi: 22343 },
+             { anno: 1998, sbarchi: 38134 },
+            { anno: 1999, sbarchi: 49999 },
+             { anno: 2000, sbarchi: 26817 },
+              { anno: 2001, sbarchi: 20143 },
+            { anno: 2002, sbarchi: 23719 },
+             { anno: 2003, sbarchi: 14331 },
+             { anno: 2004, sbarchi: 13635 },
+            { anno: 2005, sbarchi: 22939 },
+            { anno: 2006, sbarchi: 22016 },
+             { anno: 2007, sbarchi: 20455 },
+            { anno: 2008, sbarchi: 36951 },
+            { anno: 2009, sbarchi: 9573 },
+             { anno: 2010, sbarchi: 4406 },
+            { anno: 2011, sbarchi: 62692 },
+             { anno: 2012, sbarchi: 13267 },
+              { anno: 2013, sbarchi: 42925 },
+            { anno: 2014, sbarchi: 170100 },
+              { anno: 2015, sbarchi: 153842 },
+            { anno: 2016, sbarchi: 181436 },
+               { anno: 2017, sbarchi: 119369 },
+            { anno: 2018, sbarchi: 23370 },
+               { anno: 2019, sbarchi: 11471 },
+            { anno: 2020, sbarchi: 34154 }
+        ];
+
+        const canvas = document.getElementById("grafico");
+        const ctx = canvas.getContext("2d");
+
+      
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 50;
+
+       
+        const maxSbarchi = Math.max(...dati.map(d => d.sbarchi));
+
+       
+        ctx.beginPath();
+         ctx.moveTo(padding, height - padding);
+         ctx.lineTo(width - padding, height - padding);
+        ctx.lineTo(width - padding, padding); 
+          ctx.stroke();
+
+        
+        const puntoRaggio = 4;
+          const numPunti = dati.length;
+        const spazioX = (width - 2 * padding) / (numPunti - 1);
+
+         dati.forEach((d, i) => {
+               const x = padding + i * spazioX;
+            const y = height - padding - (d.sbarchi / maxSbarchi) * (height - 2 * padding);
+               ctx.beginPath();
+            ctx.arc(x, y, puntoRaggio, 0, 2 * Math.PI);
+              ctx.fillStyle = "red";
+               ctx.fill();
+
+               
+            ctx.fillStyle = "black";
+             ctx.font = "10px Arial";
+              ctx.fillText(d.anno, x - 10, height - padding + 15);
+        });
+
+        
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding - (dati[0].sbarchi / maxSbarchi) * (height - 2 * padding));
+
+        dati.forEach((d, i) => {
+            const x = padding + i * spazioX;
+            const y = height - padding - (d.sbarchi / maxSbarchi) * (height - 2 * padding);
+            ctx.lineTo(x, y);
+        });
+
+        ctx.strokeStyle = "blue";
+        ctx.stroke();
+    </script>
+    </body>
+  </html>
