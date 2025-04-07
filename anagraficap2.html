@@ -1,32 +1,32 @@
-  <!DOCTYPE html>
+   <!DOCTYPE html>
   <html lang="it">
-<head>
+ <head>
     <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualizza Dati</title>
-    <script>
-        window.onload = function() {
+      <script>
+         window.onload = function() {
             const utenteJSON = localStorage.getItem("utente");
               if (utenteJSON) {
                   const utente = JSON.parse(utenteJSON);
-                document.getElementById("nome").textContent = utente.nome;
+                  document.getElementById("nome").textContent = utente.nome;
                 document.getElementById("cognome").textContent = utente.cognome;
-                document.getElementById("eta").textContent = utente.eta;
+                      document.getElementById("eta").textContent = utente.eta;
                   document.getElementById("indirizzo").textContent = utente.indirizzo;
             } else {
                 document.getElementById("messaggio").textContent = "Nessun dato trovato.";
             }
           };
        </script>
-  </head>
-<body>
+     </head>
+<body >
       <h2>Dettagli dell'Utente</h2>
-    <table border="1">
+      <table border="1">
           <tr><th>Nome</th><td id="nome"></td></tr>
-          <tr><th>Cognome</th><td id="cognome"></td></tr>
+             <tr><th>Cognome</th><td id="cognome"></td></tr>
         <tr><th>Età</th><td id="eta"></td></tr>
-           <tr><th>Indirizzo</th><td id="indirizzo"></td></tr>
-    </table>
+             <tr><th>Indirizzo</th><td id="indirizzo"></td></tr>
+     </table>
       <p id="messaggio"></p>
-   </body>
+    </body>
  </html>
