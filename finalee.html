@@ -1,38 +1,213 @@
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import "./index.css";
-import AppProviders from "./components/AppProviders";
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TechShop E-commerce Project</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h2 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 16px;
+            overflow: auto;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        code {
+            background-color: rgba(27, 31, 35, 0.05);
+            border-radius: 3px;
+            padding: 0.2em 0.4em;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        .file-path {
+            background-color: #e7f4ff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        .instructions {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .file-section {
+            margin-bottom: 30px;
+        }
+        .language-ts, .language-tsx, .language-js, .language-jsx, .language-json {
+            color: #24292e;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 15px;
+        }
+        .toc li {
+            margin-bottom: 5px;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #0366d6;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>TechShop E-commerce Project</h1>
+    
+    <div class="instructions">
+        <h2>Come usare questo documento</h2>
+        <p>Questo documento HTML contiene tutto il codice sorgente dell'applicazione TechShop E-commerce. Puoi utilizzarlo in due modi:</p>
+        <ol>
+            <li>Copia l'intero HTML nel tuo repository GitHub come documentazione del progetto</li>
+            <li>Usa il contenuto per creare manualmente i file nella struttura indicata</li>
+        </ol>
+        <p>Ogni sezione contiene il percorso del file e il codice sorgente completo.</p>
+    </div>
+    
+    <div class="toc">
+        <h2>Indice</h2>
+        <ul>
+            <li><a href="#structure">Struttura del Progetto</a></li>
+            <li><a href="#installation">Istruzioni di Installazione</a></li>
+            <li><a href="#readme">README</a></li>
+            <li><a href="#files">File del Progetto</a></li>
+        </ul>
+    </div>
+    
+    <h2 id="structure">Struttura del Progetto</h2>
+    <pre>
+/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   ├── AppProviders.tsx
+│   │   │   ├── CartItem.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── Layout.tsx
+│   │   │   └── ProductCard.tsx
+│   │   ├── context/
+│   │   │   └── StoreContext.tsx
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   │   ├── CartPage.tsx
+│   │   │   ├── ProductDetailPage.tsx
+│   │   │   ├── ProductsPage.tsx
+│   │   │   ├── ReceiptPage.tsx
+│   │   │   ├── UploadPage.tsx
+│   │   │   ├── WelcomePage.tsx
+│   │   │   └── not-found.tsx
+│   │   ├── utils/
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   └── index.html
+├── server/
+│   ├── auth.ts
+│   ├── index.ts
+│   ├── routes.ts
+│   ├── storage.ts
+│   └── vite.ts
+└── shared/
+    └── schema.ts
+    </pre>
+    
+    <h2 id="installation">Istruzioni di Installazione</h2>
+    <div class="instructions">
+        <ol>
+            <li>Clona il repository o crea una nuova cartella di progetto</li>
+            <li>Copia i file nelle rispettive posizioni seguendo la struttura di directory mostrata sopra</li>
+            <li>Esegui <code>npm install</code> per installare tutte le dipendenze</li>
+            <li>Esegui <code>npm run dev</code> per avviare l'applicazione</li>
+            <li>Apri il browser all'indirizzo mostrato nel terminale (solitamente http://localhost:5000)</li>
+            <li>Usa il pulsante "Load Sample Data" e poi "Upload Data" per popolare il database con dati di esempio</li>
+        </ol>
+    </div>
+    
+    <h2 id="readme">README.md</h2>
+    <pre>
+# TechShop E-commerce
 
-createRoot(document.getElementById("root")!).render(
-  <AppProviders>
-    <App />
-  </AppProviders>
-);
-import { ReactNode } from "react";
-import { StoreProvider } from "../context/StoreContext";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "../lib/queryClient";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/toaster";
+Un'applicazione web di e-commerce per la vendita di prodotti tecnologici sviluppata con React, Express e TypeScript.
 
-interface AppProvidersProps {
-  children: ReactNode;
-}
+## Caratteristiche
 
-const AppProviders = ({ children }: AppProvidersProps) => {
-  return (
-    <StoreProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          {children}
-          <Toaster />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </StoreProvider>
-  );
-};
+- Autenticazione utente
+- Caricamento dati da file JSON
+- Visualizzazione prodotti con filtering e sorting
+- Pagina dettaglio prodotto
+- Carrello acquisti
+- Checkout e ricevuta
 
-export default AppProviders;
+## Tecnologie utilizzate
+
+- Frontend: React, TailwindCSS, shadcn/ui
+- Backend: Express, Node.js
+- Database: In-memory storage (può essere facilmente esteso a PostgreSQL)
+- Altri: TypeScript, React Query, Zod per validazione
+
+## Come iniziare
+
+1. Installa le dipendenze:
+   ```bash
+   npm install
+   ```
+
+2. Avvia l'applicazione:
+   ```bash
+   npm run dev
+   ```
+
+3. Apri il browser all'indirizzo mostrato nel terminale (solitamente http://localhost:5000)
+
+4. Usa il pulsante "Load Sample Data" e poi "Upload Data" per popolare il database con dati di esempio
+
+## Struttura del progetto
+
+- `/client` - Frontend React
+- `/server` - Backend Express
+- `/shared` - Tipi e schemi condivisi
+    </pre>
+
+    <h2 id="files">File del Progetto</h2>
+    
+    <div class="file-section">
+        <div class="file-path">client/src/App.tsx</div>
+        <pre><code class="language-tsx">
 import { Switch, Route } from "wouter";
 import { useStore } from "./context/StoreContext";
 
@@ -80,30 +255,155 @@ function App() {
 }
 
 export default App;
-import { ReactNode } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import { useStore } from "../context/StoreContext";
-
-interface LayoutProps {
-  children: ReactNode;
-}
-
-const Layout = ({ children }: LayoutProps) => {
-  const { currentUser } = useStore();
-  
-  return (
-    <div className="bg-light-gray font-sans min-h-screen flex flex-col">
-      <Header />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
-        {children}
-      </main>
-      <Footer />
+        </code></pre>
     </div>
-  );
-};
 
-export default Layout;
+    <div class="file-section">
+        <div class="file-path">client/src/main.tsx</div>
+        <pre><code class="language-tsx">
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import AppProviders from "./components/AppProviders";
+
+createRoot(document.getElementById("root")!).render(
+  <AppProviders>
+    <App />
+  </AppProviders>
+);
+        </code></pre>
+    </div>
+
+    <div class="file-section">
+        <div class="file-path">shared/schema.ts</div>
+        <pre><code class="language-ts">
+import { pgTable, text, integer, timestamp, doublePrecision, serial } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
+
+// Users table
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  zipCode: text("zip_code").notNull(),
+  phone: text("phone").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+  name: true,
+  email: true,
+  address: true,
+  city: true,
+  zipCode: true,
+  phone: true
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+
+// Products table
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  brand: text("brand").notNull(),
+  model: text("model").notNull(),
+  description: text("description").notNull(),
+  price: doublePrecision("price").notNull(),
+  image: text("image"),
+  category: text("category").notNull(),
+  specifications: text("specifications").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertProductSchema = createInsertSchema(products).pick({
+  brand: true,
+  model: true,
+  description: true,
+  price: true,
+  image: true,
+  category: true,
+  specifications: true
+});
+
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type Product = typeof products.$inferSelect;
+
+// Orders table
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  orderNumber: text("order_number").notNull(),
+  status: text("status").notNull(),
+  total: doublePrecision("total").notNull(),
+  tax: doublePrecision("tax").notNull(),
+  shipping: doublePrecision("shipping").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertOrderSchema = createInsertSchema(orders).pick({
+  userId: true,
+  orderNumber: true,
+  status: true,
+  total: true,
+  tax: true,
+  shipping: true
+});
+
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof orders.$inferSelect;
+
+// Order Items table
+export const orderItems = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id").notNull(),
+  productId: integer("product_id").notNull(),
+  quantity: integer("quantity").notNull(),
+  price: doublePrecision("price").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertOrderItemSchema = createInsertSchema(orderItems).pick({
+  orderId: true,
+  productId: true,
+  quantity: true,
+  price: true
+});
+
+export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
+export type OrderItem = typeof orderItems.$inferSelect;
+
+// Cart item schema for frontend usage
+export const cartItemSchema = z.object({
+  id: z.number(),
+  brand: z.string(),
+  model: z.string(),
+  price: z.number(),
+  image: z.string().optional(),
+  quantity: z.number().min(1)
+});
+
+export type CartItem = z.infer<typeof cartItemSchema>;
+
+// File upload schema
+export const fileUploadSchema = z.object({
+  users: z.array(insertUserSchema),
+  products: z.array(insertProductSchema)
+});
+
+export type FileUpload = z.infer<typeof fileUploadSchema>;
+        </code></pre>
+    </div>
+
+    <div class="file-section">
+        <div class="file-path">client/src/context/StoreContext.tsx</div>
+        <pre><code class="language-tsx">
 import { createContext, ReactNode, useContext, useState } from "react";
 import { Product, User } from "../../shared/schema";
 import { formatCurrency } from "../utils/formatCurrency";
@@ -246,417 +546,700 @@ export const useStore = () => {
   }
   return context;
 };
-import { pgTable, text, integer, timestamp, doublePrecision } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
+        </code></pre>
+    </div>
 
-// Users table
-export const users = pgTable("users", {
-  id: integer("id").primaryKey(),
-  username: text("username").notNull(),
-  password: text("password").notNull(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  address: text("address").notNull(),
-  city: text("city").notNull(),
-  zipCode: text("zip_code").notNull(),
-  phone: text("phone").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull()
-});
-
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  name: true,
-  email: true,
-  address: true,
-  city: true,
-  zipCode: true,
-  phone: true
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
-// Products table
-export const products = pgTable("products", {
-  id: integer("id").primaryKey(),
-  brand: text("brand").notNull(),
-  model: text("model").notNull(),
-  description: text("description").notNull(),
-  price: doublePrecision("price").notNull(),
-  image: text("image"),
-  category: text("category").notNull(),
-  specifications: text("specifications").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull()
-});
-
-export const insertProductSchema = createInsertSchema(products).pick({
-  brand: true,
-  model: true,
-  description: true,
-  price: true,
-  image: true,
-  category: true,
-  specifications: true
-});
-
-export type InsertProduct = z.infer<typeof insertProductSchema>;
-export type Product = typeof products.$inferSelect;
-
-// Orders table
-export const orders = pgTable("orders", {
-  id: integer("id").primaryKey(),
-  userId: integer("user_id").notNull(),
-  orderNumber: text("order_number").notNull(),
-  status: text("status").notNull(),
-  total: doublePrecision("total").notNull(),
-  tax: doublePrecision("tax").notNull(),
-  shipping: doublePrecision("shipping").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull()
-});
-
-export const insertOrderSchema = createInsertSchema(orders).pick({
-  userId: true,
-  orderNumber: true,
-  status: true,
-  total: true,
-  tax: true,
-  shipping: true
-});
-
-export type InsertOrder = z.infer<typeof insertOrderSchema>;
-export type Order = typeof orders.$inferSelect;
-
-// Order Items table
-export const orderItems = pgTable("order_items", {
-  id: integer("id").primaryKey(),
-  orderId: integer("order_id").notNull(),
-  productId: integer("product_id").notNull(),
-  quantity: integer("quantity").notNull(),
-  price: doublePrecision("price").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull()
-});
-
-export const insertOrderItemSchema = createInsertSchema(orderItems).pick({
-  orderId: true,
-  productId: true,
-  quantity: true,
-  price: true
-});
-
-export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
-export type OrderItem = typeof orderItems.$inferSelect;
-
-// Cart item schema for frontend usage
-export const cartItemSchema = z.object({
-  id: z.number(),
-  brand: z.string(),
-  model: z.string(),
-  price: z.number(),
-  image: z.string().optional(),
-  quantity: z.number().min(1)
-});
-
-export type CartItem = z.infer<typeof cartItemSchema>;
-
-// File upload schema
-export const fileUploadSchema = z.object({
-  users: z.array(insertUserSchema),
-  products: z.array(insertProductSchema)
-});
-
-export type FileUpload = z.infer<typeof fileUploadSchema>;
-import { User, InsertUser, Product, InsertProduct, Order, InsertOrder, OrderItem, InsertOrderItem } from "../shared/schema";
-
-export interface IStorage {
-  // User operations
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  getAllUsers(): Promise<User[]>;
-  
-  // Product operations
-  getProduct(id: number): Promise<Product | undefined>;
-  createProduct(product: InsertProduct): Promise<Product>;
-  getAllProducts(): Promise<Product[]>;
-  
-  // Order operations
-  createOrder(order: InsertOrder): Promise<Order>;
-  getOrder(id: number): Promise<Order | undefined>;
-  getUserOrders(userId: number): Promise<Order[]>;
-  
-  // Order Item operations
-  createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
-  getOrderItems(orderId: number): Promise<OrderItem[]>;
-  
-  // Batch operations for file upload
-  createManyUsers(users: InsertUser[]): Promise<User[]>;
-  createManyProducts(products: InsertProduct[]): Promise<Product[]>;
-}
-
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private products: Map<number, Product>;
-  private orders: Map<number, Order>;
-  private orderItems: Map<number, OrderItem>;
-  private userCurrentId: number;
-  private productCurrentId: number;
-  private orderCurrentId: number;
-  private orderItemCurrentId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.products = new Map();
-    this.orders = new Map();
-    this.orderItems = new Map();
-    this.userCurrentId = 1;
-    this.productCurrentId = 1;
-    this.orderCurrentId = 1;
-    this.orderItemCurrentId = 1;
-  }
-
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    for (const user of this.users.values()) {
-      if (user.username === username) {
-        return user;
-      }
-    }
-    return undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.userCurrentId++;
-    const createdAt = new Date();
-    const user: User = { ...insertUser, id, createdAt };
-    this.users.set(id, user);
-    return user;
-  }
-
-  async getAllUsers(): Promise<User[]> {
-    return Array.from(this.users.values());
-  }
-
-  async getProduct(id: number): Promise<Product | undefined> {
-    return this.products.get(id);
-  }
-
-  async createProduct(insertProduct: InsertProduct): Promise<Product> {
-    const id = this.productCurrentId++;
-    const createdAt = new Date();
-    const product: Product = { ...insertProduct, id, createdAt };
-    this.products.set(id, product);
-    return product;
-  }
-
-  async getAllProducts(): Promise<Product[]> {
-    return Array.from(this.products.values());
-  }
-
-  async createOrder(insertOrder: InsertOrder): Promise<Order> {
-    const id = this.orderCurrentId++;
-    const createdAt = new Date();
-    const order: Order = { ...insertOrder, id, createdAt };
-    this.orders.set(id, order);
-    return order;
-  }
-
-  async getOrder(id: number): Promise<Order | undefined> {
-    return this.orders.get(id);
-  }
-
-  async getUserOrders(userId: number): Promise<Order[]> {
-    return Array.from(this.orders.values()).filter(order => order.userId === userId);
-  }
-
-  async createOrderItem(insertOrderItem: InsertOrderItem): Promise<OrderItem> {
-    const id = this.orderItemCurrentId++;
-    const createdAt = new Date();
-    const orderItem: OrderItem = { ...insertOrderItem, id, createdAt };
-    this.orderItems.set(id, orderItem);
-    return orderItem;
-  }
-
-  async getOrderItems(orderId: number): Promise<OrderItem[]> {
-    return Array.from(this.orderItems.values()).filter(item => item.orderId === orderId);
-  }
-
-  async createManyUsers(users: InsertUser[]): Promise<User[]> {
-    const createdUsers: User[] = [];
-    for (const user of users) {
-      const createdUser = await this.createUser(user);
-      createdUsers.push(createdUser);
-    }
-    return createdUsers;
-  }
-
-  async createManyProducts(products: InsertProduct[]): Promise<Product[]> {
-    const createdProducts: Product[] = [];
-    for (const product of products) {
-      const createdProduct = await this.createProduct(product);
-      createdProducts.push(createdProduct);
-    }
-    return createdProducts;
-  }
-}
-
-export const storage = new MemStorage();
-import { Express, Request, Response } from "express";
-import { Server } from "http";
-import multer from "multer";
+    <div class="file-section">
+        <div class="file-path">server/routes.ts</div>
+        <pre><code class="language-ts">
+import type { Express } from "express";
+import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { fileUploadSchema, cartItemSchema, insertOrderSchema, orderItems } from "../shared/schema";
-import { z } from "zod";
-
-// Configure multer for file uploads
-const upload = multer({ 
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
+import { setupAuth } from "./auth";
+import { fileUploadSchema, insertProductSchema, insertOrderSchema, insertOrderItemSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // File upload endpoint
-  app.post('/api/upload', upload.single('file'), async (req: Request, res: Response) => {
+  // Set up authentication routes
+  setupAuth(app);
+
+  // API routes
+  // File upload route for initial data
+  app.post("/api/upload", async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+      const parsedData = fileUploadSchema.safeParse(req.body);
+      
+      if (!parsedData.success) {
+        return res.status(400).json({ 
+          message: "Invalid data format", 
+          errors: parsedData.error.format() 
+        });
       }
-
-      // Parse the uploaded JSON file
-      const fileContent = req.file.buffer.toString('utf-8');
-      const data = JSON.parse(fileContent);
-
-      // Validate against the schema
-      const validatedData = fileUploadSchema.parse(data);
-
-      // Store the data
-      const users = await storage.createManyUsers(validatedData.users);
-      const products = await storage.createManyProducts(validatedData.products);
-
-      // Return the first user as the "logged in" user (for demo purposes)
-      const currentUser = users[0];
-      const { password, ...userWithoutPassword } = currentUser;
-
-      res.status(201).json({ 
-        message: 'File uploaded successfully',
-        user: userWithoutPassword,
-        stats: {
-          usersLoaded: users.length,
-          productsLoaded: products.length
-        }
+      
+      const { users, products } = parsedData.data;
+      
+      // Create users and products in storage
+      const createdUsers = await storage.createManyUsers(users);
+      const createdProducts = await storage.createManyProducts(products);
+      
+      res.status(201).json({
+        message: "Data uploaded successfully",
+        usersCount: createdUsers.length,
+        productsCount: createdProducts.length
       });
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ error: 'Invalid data format', details: error.errors });
-      }
-      console.error('Upload error:', error);
-      res.status(500).json({ error: 'Failed to process uploaded file' });
+      console.error("Upload error:", error);
+      res.status(500).json({ message: "Failed to upload data" });
     }
   });
 
-  // Get all products
-  app.get('/api/products', async (req: Request, res: Response) => {
+  // Products routes
+  app.get("/api/products", async (req, res) => {
     try {
-      const products = await storage.getAllProducts();
+      const category = req.query.category as string | undefined;
+      let products;
+      
+      if (category) {
+        products = await storage.getProductsByCategory(category);
+      } else {
+        products = await storage.getAllProducts();
+      }
+      
       res.json(products);
     } catch (error) {
-      console.error('Error fetching products:', error);
-      res.status(500).json({ error: 'Failed to fetch products' });
+      console.error("Error fetching products:", error);
+      res.status(500).json({ message: "Failed to fetch products" });
     }
   });
 
-  // Get product by ID
-  app.get('/api/products/:id', async (req: Request, res: Response) => {
+  app.get("/api/products/:id", async (req, res) => {
     try {
       const productId = parseInt(req.params.id);
       if (isNaN(productId)) {
-        return res.status(400).json({ error: 'Invalid product ID' });
+        return res.status(400).json({ message: "Invalid product ID" });
       }
       
       const product = await storage.getProduct(productId);
       if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
+        return res.status(404).json({ message: "Product not found" });
       }
       
       res.json(product);
     } catch (error) {
-      console.error('Error fetching product:', error);
-      res.status(500).json({ error: 'Failed to fetch product' });
+      console.error("Error fetching product:", error);
+      res.status(500).json({ message: "Failed to fetch product" });
     }
   });
 
-  // Create order
-  app.post('/api/orders', async (req: Request, res: Response) => {
+  // Orders routes
+  app.post("/api/orders", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
     try {
-      // Validate order data
-      const orderData = insertOrderSchema.parse(req.body.order);
+      const userId = req.user!.id;
+      const orderData = insertOrderSchema.safeParse({
+        ...req.body,
+        userId
+      });
       
-      // Validate cart items
-      const cartItems = z.array(cartItemSchema).parse(req.body.items);
+      if (!orderData.success) {
+        return res.status(400).json({ 
+          message: "Invalid order data", 
+          errors: orderData.error.format() 
+        });
+      }
       
-      // Create the order
-      const order = await storage.createOrder(orderData);
+      const order = await storage.createOrder(orderData.data);
       
       // Create order items
-      const createdItems = [];
-      for (const item of cartItems) {
-        const orderItem = await storage.createOrderItem({
-          orderId: order.id,
-          productId: item.id,
-          quantity: item.quantity,
-          price: item.price
-        });
-        createdItems.push(orderItem);
+      const { items } = req.body;
+      if (Array.isArray(items)) {
+        for (const item of items) {
+          const orderItemData = insertOrderItemSchema.safeParse({
+            orderId: order.id,
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price
+          });
+          
+          if (orderItemData.success) {
+            await storage.createOrderItem(orderItemData.data);
+          }
+        }
       }
       
-      res.status(201).json({ 
-        message: 'Order created successfully',
-        order,
-        items: createdItems
-      });
+      res.status(201).json(order);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ error: 'Invalid order data', details: error.errors });
-      }
-      console.error('Error creating order:', error);
-      res.status(500).json({ error: 'Failed to create order' });
+      console.error("Error creating order:", error);
+      res.status(500).json({ message: "Failed to create order" });
     }
   });
 
-  // Get user orders
-  app.get('/api/users/:userId/orders', async (req: Request, res: Response) => {
+  app.get("/api/orders/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
     try {
-      const userId = parseInt(req.params.userId);
-      if (isNaN(userId)) {
-        return res.status(400).json({ error: 'Invalid user ID' });
+      const orderId = parseInt(req.params.id);
+      if (isNaN(orderId)) {
+        return res.status(400).json({ message: "Invalid order ID" });
       }
       
+      const order = await storage.getOrder(orderId);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      // Check if the order belongs to the current user
+      if (order.userId !== req.user!.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const orderItems = await storage.getOrderItems(orderId);
+      
+      res.json({ order, items: orderItems });
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      res.status(500).json({ message: "Failed to fetch order" });
+    }
+  });
+
+  app.get("/api/orders", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
+    try {
+      const userId = req.user!.id;
       const orders = await storage.getUserOrders(userId);
       
-      // For each order, fetch the order items
-      const ordersWithItems = await Promise.all(orders.map(async (order) => {
-        const items = await storage.getOrderItems(order.id);
-        return { ...order, items };
-      }));
-      
-      res.json(ordersWithItems);
+      res.json(orders);
     } catch (error) {
-      console.error('Error fetching user orders:', error);
-      res.status(500).json({ error: 'Failed to fetch user orders' });
+      console.error("Error fetching orders:", error);
+      res.status(500).json({ message: "Failed to fetch orders" });
     }
   });
 
-  return app;
+  const httpServer = createServer(app);
+  return httpServer;
 }
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+        </code></pre>
+    </div>
+
+    <div class="file-section">
+        <div class="file-path">client/src/pages/UploadPage.tsx</div>
+        <pre><code class="language-tsx">
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useStore } from "../context/StoreContext";
+import { Loader2, Upload } from "lucide-react";
+
+const UploadPage = () => {
+  const [jsonData, setJsonData] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
+  const { setCurrentUser } = useStore();
+
+  const handleUpload = async () => {
+    if (!jsonData.trim()) {
+      toast({
+        title: "No data provided",
+        description: "Please enter JSON data to upload.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      
+      // Parse JSON data
+      const parsedData = JSON.parse(jsonData);
+      
+      // Upload data to server
+      const response = await apiRequest("POST", "/api/upload", parsedData);
+      const result = await response.json();
+      
+      toast({
+        title: "Upload successful",
+        description: `Uploaded ${result.usersCount} users and ${result.productsCount} products.`,
+      });
+      
+      // Auto-login with the first user
+      if (parsedData.users && parsedData.users.length > 0) {
+        const firstUser = parsedData.users[0];
+        try {
+          const loginResponse = await apiRequest("POST", "/api/login", {
+            username: firstUser.username,
+            password: firstUser.password,
+          });
+          
+          const userData = await loginResponse.json();
+          setCurrentUser(userData);
+          queryClient.setQueryData(["/api/user"], userData);
+          
+        } catch (loginError) {
+          console.error("Auto-login failed:", loginError);
+          toast({
+            title: "Auto-login failed",
+            description: "Upload was successful, but automatic login failed. Please reload the page and try again.",
+            variant: "destructive",
+          });
+        }
+      }
+      
+    } catch (error) {
+      console.error("Upload error:", error);
+      
+      let errorMessage = "Invalid JSON format or server error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      toast({
+        title: "Upload failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleLoadSampleData = () => {
+    const sampleData = {
+      users: [
+        {
+          username: "john.doe",
+          password: "password123",
+          name: "John Doe",
+          email: "john.doe@example.com",
+          address: "123 Main St",
+          city: "New York",
+          zipCode: "10001",
+          phone: "555-123-4567"
+        }
+      ],
+      products: [
+        {
+          brand: "Apple",
+          model: "MacBook Pro 16\"",
+          description: "Latest model with M2 chip, 16GB RAM and 512GB SSD storage",
+          price: 2499,
+          image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=500&auto=format&fit=crop",
+          category: "Laptops",
+          specifications: "M2 Pro chip, 16GB RAM, 512GB SSD"
+        },
+        {
+          brand: "Apple",
+          model: "iPhone 14 Pro",
+          description: "128GB, Deep Purple, A16 Bionic chip",
+          price: 999,
+          image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?q=80&w=500&auto=format&fit=crop",
+          category: "Phones",
+          specifications: "A16 Bionic, 6.1\" OLED, 128GB"
+        },
+        {
+          brand: "Samsung",
+          model: "Galaxy Watch 5",
+          description: "40mm, Bluetooth, Silver, ECG monitoring",
+          price: 279,
+          image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=500&auto=format&fit=crop",
+          category: "Wearables",
+          specifications: "40mm, Bluetooth, ECG, Heart rate"
+        },
+        {
+          brand: "Sony",
+          model: "WH-1000XM4",
+          description: "Wireless Noise Cancelling Headphones",
+          price: 349,
+          image: "https://images.unsplash.com/photo-1629429407759-56fa8511a50e?q=80&w=500&auto=format&fit=crop",
+          category: "Accessories",
+          specifications: "Bluetooth 5.0, 30 hour battery, ANC"
+        },
+        {
+          brand: "Apple",
+          model: "iPad Pro 12.9\"",
+          description: "M2 chip, 256GB, Wi-Fi, Space Gray",
+          price: 1099,
+          image: "https://images.unsplash.com/photo-1587033411391-5d9e51cce126?q=80&w=500&auto=format&fit=crop",
+          category: "Tablets",
+          specifications: "M2 chip, 12.9\" Liquid Retina XDR, 256GB"
+        },
+        {
+          brand: "Google",
+          model: "Pixel 7 Pro",
+          description: "256GB, Obsidian, Tensor G2 chip",
+          price: 899,
+          image: "https://images.unsplash.com/photo-1638614167636-11636e6d049c?q=80&w=500&auto=format&fit=crop",
+          category: "Phones",
+          specifications: "Tensor G2, 6.7\" OLED, 256GB"
+        },
+        {
+          brand: "Apple",
+          model: "AirPods Pro 2",
+          description: "Active Noise Cancellation, Transparency mode",
+          price: 249,
+          image: "https://images.unsplash.com/photo-1662947245757-466fed61802f?q=80&w=500&auto=format&fit=crop",
+          category: "Accessories",
+          specifications: "ANC, Transparency, H2 chip"
+        },
+        {
+          brand: "Samsung",
+          model: "Galaxy S23 Ultra",
+          description: "512GB, Phantom Black, 200MP camera",
+          price: 1199,
+          image: "https://images.unsplash.com/photo-1659175339366-96f87e9c0c65?q=80&w=500&auto=format&fit=crop",
+          category: "Phones",
+          specifications: "Snapdragon 8 Gen 2, 6.8\" AMOLED, 512GB"
+        }
+      ]
+    };
+    
+    setJsonData(JSON.stringify(sampleData, null, 2));
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="w-full max-w-4xl mx-4">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl">Welcome to <span className="text-primary">Tech<span className="text-accent">Shop</span></span></CardTitle>
+          <CardDescription>
+            Upload user and product data to get started with the e-commerce platform
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="upload">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="upload">Upload JSON</TabsTrigger>
+              <TabsTrigger value="instructions">Instructions</TabsTrigger>
+            </TabsList>
+            <TabsContent value="upload" className="mt-6">
+              <div className="space-y-4">
+                <div className="flex justify-end">
+                  <Button variant="outline" onClick={handleLoadSampleData}>
+                    Load Sample Data
+                  </Button>
+                </div>
+                <Textarea
+                  placeholder="Paste your JSON data here..."
+                  className="min-h-[300px] font-mono"
+                  value={jsonData}
+                  onChange={(e) => setJsonData(e.target.value)}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="instructions" className="mt-6">
+              <div className="space-y-4">
+                <div className="bg-muted p-4 rounded-md">
+                  <h3 className="text-lg font-semibold mb-2">JSON Format</h3>
+                  <p className="mb-2">Your JSON should include:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li><code className="text-primary bg-primary-50 px-1 rounded">users</code> - Array of user objects</li>
+                    <li><code className="text-primary bg-primary-50 px-1 rounded">products</code> - Array of product objects</li>
+                  </ul>
+                  <div className="mt-4">
+                    <p className="font-semibold">Example:</p>
+                    <pre className="bg-background p-2 rounded text-xs overflow-auto mt-2">
+{`{
+  "users": [
+    {
+      "username": "john.doe",
+      "password": "password123",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "address": "123 Main St",
+      "city": "New York",
+      "zipCode": "10001",
+      "phone": "555-123-4567"
+    }
+  ],
+  "products": [
+    {
+      "brand": "Apple",
+      "model": "MacBook Pro",
+      "description": "Latest model with M2 chip",
+      "price": 2499,
+      "image": "https://example.com/macbook.jpg",
+      "category": "Laptops",
+      "specifications": "M2, 16GB RAM, 512GB SSD"
+    }
+  ]
+}`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+        <CardFooter>
+          <Button 
+            className="w-full" 
+            size="lg"
+            onClick={handleUpload}
+            disabled={isUploading}
+          >
+            {isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Data
+              </>
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
 };
+
+export default UploadPage;
+        </code></pre>
+    </div>
+
+    <div class="file-section">
+        <div class="file-path">client/src/components/Layout.tsx</div>
+        <pre><code class="language-tsx">
+import { ReactNode } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { useStore } from "../context/StoreContext";
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const { currentUser } = useStore();
+  
+  return (
+    <div className="min-h-screen flex flex-col bg-background font-sans">
+      {currentUser && <Header />}
+      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
+      {currentUser && <Footer />}
+    </div>
+  );
+};
+
+export default Layout;
+        </code></pre>
+    </div>
+
+    <div class="file-section">
+        <div class="file-path">client/src/components/Header.tsx</div>
+        <pre><code class="language-tsx">
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
+import { useStore } from "../context/StoreContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { apiRequest } from "../lib/queryClient";
+import { ShoppingCart, User, Menu, X } from "lucide-react";
+import CartItem from "./CartItem";
+import { useToast } from "@/hooks/use-toast";
+
+const Header = () => {
+  const { currentUser, cart, calculateSubtotal, calculateTotal, formatCurrency, clearCart } = useStore();
+  const [, navigate] = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { toast } = useToast();
+  
+  const handleLogout = async () => {
+    try {
+      await apiRequest("POST", "/api/logout");
+      window.location.href = "/"; // Full page refresh to reset state
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "An error occurred during logout. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <header className="bg-white shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <span className="text-primary text-2xl font-bold">Tech<span className="text-accent">Shop</span></span>
+            </Link>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            <Link href="/" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
+              Home
+            </Link>
+            <Link href="/products" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
+              Products
+            </Link>
+          </nav>
+          
+          {/* Actions */}
+          <div className="flex items-center">
+            {/* User dropdown */}
+            <div className="ml-4 relative hidden md:block">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="flex items-center text-sm font-medium text-gray-700 hover:text-primary">
+                    <span className="mr-2">{currentUser?.name || "Account"}</span>
+                    <User className="h-5 w-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2">
+                  <div className="flex flex-col space-y-1">
+                    <p className="px-2 py-1.5 text-sm font-semibold">{currentUser?.name}</p>
+                    <p className="px-2 py-1.5 text-xs text-gray-500">{currentUser?.email}</p>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="mt-2"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            {/* Cart */}
+            <div className="ml-6 relative">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-gray-700 hover:text-primary relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    {cart.length > 0 && (
+                      <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-accent rounded-full">
+                        {cart.reduce((total, item) => total + item.quantity, 0)}
+                      </span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-96 p-0">
+                  <div className="flex flex-col h-full max-h-[500px]">
+                    <div className="flex justify-between items-center p-4 border-b">
+                      <h2 className="text-lg font-semibold">Your Cart ({cart.length})</h2>
+                    </div>
+                    
+                    <div className="flex-grow overflow-y-auto py-2 px-4 max-h-[300px]">
+                      {cart.length === 0 ? (
+                        <div className="py-6 text-center text-gray-500">
+                          Your cart is empty
+                        </div>
+                      ) : (
+                        cart.map(item => (
+                          <CartItem key={item.id} item={item} />
+                        ))
+                      )}
+                    </div>
+                    
+                    {cart.length > 0 && (
+                      <div className="border-t p-4">
+                        <div className="flex justify-between mb-2">
+                          <span className="text-gray-600">Subtotal</span>
+                          <span className="font-semibold">{formatCurrency(calculateSubtotal())}</span>
+                        </div>
+                        <div className="flex justify-between mb-4">
+                          <span className="text-gray-600">Shipping</span>
+                          <span className="font-semibold">{formatCurrency(10)}</span>
+                        </div>
+                        <div className="flex justify-between mb-4 text-lg font-bold">
+                          <span>Total</span>
+                          <span>{formatCurrency(calculateTotal())}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            className="flex-1"
+                            onClick={() => {
+                              navigate("/cart");
+                            }}
+                          >
+                            Checkout
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => clearCart()}
+                          >
+                            Clear Cart
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="ml-4 md:hidden">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <Link href="/" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">
+              Home
+            </Link>
+            <Link href="/products" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">
+              Products
+            </Link>
+            <div className="border-t border-gray-200 my-2"></div>
+            <div className="px-3 py-2">
+              <p className="text-base font-medium text-gray-900">{currentUser?.name}</p>
+              <p className="text-sm text-gray-500">{currentUser?.email}</p>
+            </div>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="ml-3 mb-2"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
+        </code></pre>
+    </div>
+
+</body>
+</html>
