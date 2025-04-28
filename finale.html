@@ -1,0 +1,662 @@
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import AppProviders from "./components/AppProviders";
+
+createRoot(document.getElementById("root")!).render(
+  <AppProviders>
+    <App />
+  </AppProviders>
+);
+import { ReactNode } from "react";
+import { StoreProvider } from "../context/StoreContext";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../lib/queryClient";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+
+interface AppProvidersProps {
+  children: ReactNode;
+}
+
+const AppProviders = ({ children }: AppProvidersProps) => {
+  return (
+    <StoreProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          {children}
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </StoreProvider>
+  );
+};
+
+export default AppProviders;
+import { Switch, Route } from "wouter";
+import { useStore } from "./context/StoreContext";
+
+import Layout from "./components/Layout";
+import UploadPage from "./pages/UploadPage";
+import WelcomePage from "./pages/WelcomePage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
+import ReceiptPage from "./pages/ReceiptPage";
+import NotFound from "@/pages/not-found";
+
+function Router() {
+  const { currentUser } = useStore();
+  
+  // If user is not authenticated, only show upload page
+  if (!currentUser) {
+    return (
+      <Switch>
+        <Route path="/" component={UploadPage} />
+        <Route path="*" component={UploadPage} />
+      </Switch>
+    );
+  }
+  
+  // User is authenticated, show all pages
+  return (
+    <Switch>
+      <Route path="/" component={WelcomePage} />
+      <Route path="/products" component={ProductsPage} />
+      <Route path="/product/:id" component={ProductDetailPage} />
+      <Route path="/cart" component={CartPage} />
+      <Route path="/receipt" component={ReceiptPage} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <Layout>
+      <Router />
+    </Layout>
+  );
+}
+
+export default App;
+import { ReactNode } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { useStore } from "../context/StoreContext";
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const { currentUser } = useStore();
+  
+  return (
+    <div className="bg-light-gray font-sans min-h-screen flex flex-col">
+      <Header />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;
+import { createContext, ReactNode, useContext, useState } from "react";
+import { Product, User } from "../../shared/schema";
+import { formatCurrency } from "../utils/formatCurrency";
+
+interface CartItem {
+  id: number;
+  brand: string;
+  model: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+interface Order {
+  id: number;
+  date: string;
+  items: CartItem[];
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  total: number;
+  orderNumber: string;
+}
+
+interface StoreContextType {
+  currentUser: Omit<User, "password"> | null;
+  setCurrentUser: (user: Omit<User, "password"> | null) => void;
+  products: Product[];
+  setProducts: (products: Product[]) => void;
+  cart: CartItem[];
+  addToCart: (product: Product, quantity: number) => void;
+  removeFromCart: (productId: number) => void;
+  updateCartItemQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  currentOrder: Order | null;
+  setCurrentOrder: (order: Order | null) => void;
+  calculateSubtotal: () => number;
+  calculateTax: () => number;
+  calculateTotal: () => number;
+  formatCurrency: (amount: number) => string;
+}
+
+const StoreContext = createContext<StoreContextType | undefined>(undefined);
+
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
+  const [currentUser, setCurrentUser] = useState<Omit<User, "password"> | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+
+  const addToCart = (product: Product, quantity: number) => {
+    // Check if the product is already in the cart
+    const existingItemIndex = cart.findIndex(item => item.id === product.id);
+
+    if (existingItemIndex !== -1) {
+      // Product already in cart, update quantity
+      const updatedCart = [...cart];
+      updatedCart[existingItemIndex] = {
+        ...updatedCart[existingItemIndex],
+        quantity: updatedCart[existingItemIndex].quantity + quantity
+      };
+      setCart(updatedCart);
+    } else {
+      // Product not in cart, add it
+      const newItem: CartItem = {
+        id: product.id,
+        brand: product.brand,
+        model: product.model,
+        price: product.price,
+        image: product.image || '', // Default to empty string if no image
+        quantity
+      };
+      setCart([...cart, newItem]);
+    }
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCart(cart.filter(item => item.id !== productId));
+  };
+
+  const updateCartItemQuantity = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    const updatedCart = cart.map(item => 
+      item.id === productId ? { ...item, quantity } : item
+    );
+    
+    setCart(updatedCart);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const calculateSubtotal = () => {
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const calculateTax = () => {
+    return calculateSubtotal() * 0.07; // 7% tax
+  };
+
+  const calculateTotal = () => {
+    const shipping = 10; // Fixed shipping cost
+    return calculateSubtotal() + calculateTax() + shipping;
+  };
+
+  return (
+    <StoreContext.Provider
+      value={{
+        currentUser,
+        setCurrentUser,
+        products,
+        setProducts,
+        cart,
+        addToCart,
+        removeFromCart,
+        updateCartItemQuantity,
+        clearCart,
+        currentOrder,
+        setCurrentOrder,
+        calculateSubtotal,
+        calculateTax,
+        calculateTotal,
+        formatCurrency
+      }}
+    >
+      {children}
+    </StoreContext.Provider>
+  );
+};
+
+export const useStore = () => {
+  const context = useContext(StoreContext);
+  if (context === undefined) {
+    throw new Error("useStore must be used within a StoreProvider");
+  }
+  return context;
+};
+import { pgTable, text, integer, timestamp, doublePrecision } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
+
+// Users table
+export const users = pgTable("users", {
+  id: integer("id").primaryKey(),
+  username: text("username").notNull(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  zipCode: text("zip_code").notNull(),
+  phone: text("phone").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+  name: true,
+  email: true,
+  address: true,
+  city: true,
+  zipCode: true,
+  phone: true
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+
+// Products table
+export const products = pgTable("products", {
+  id: integer("id").primaryKey(),
+  brand: text("brand").notNull(),
+  model: text("model").notNull(),
+  description: text("description").notNull(),
+  price: doublePrecision("price").notNull(),
+  image: text("image"),
+  category: text("category").notNull(),
+  specifications: text("specifications").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertProductSchema = createInsertSchema(products).pick({
+  brand: true,
+  model: true,
+  description: true,
+  price: true,
+  image: true,
+  category: true,
+  specifications: true
+});
+
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type Product = typeof products.$inferSelect;
+
+// Orders table
+export const orders = pgTable("orders", {
+  id: integer("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  orderNumber: text("order_number").notNull(),
+  status: text("status").notNull(),
+  total: doublePrecision("total").notNull(),
+  tax: doublePrecision("tax").notNull(),
+  shipping: doublePrecision("shipping").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertOrderSchema = createInsertSchema(orders).pick({
+  userId: true,
+  orderNumber: true,
+  status: true,
+  total: true,
+  tax: true,
+  shipping: true
+});
+
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof orders.$inferSelect;
+
+// Order Items table
+export const orderItems = pgTable("order_items", {
+  id: integer("id").primaryKey(),
+  orderId: integer("order_id").notNull(),
+  productId: integer("product_id").notNull(),
+  quantity: integer("quantity").notNull(),
+  price: doublePrecision("price").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const insertOrderItemSchema = createInsertSchema(orderItems).pick({
+  orderId: true,
+  productId: true,
+  quantity: true,
+  price: true
+});
+
+export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
+export type OrderItem = typeof orderItems.$inferSelect;
+
+// Cart item schema for frontend usage
+export const cartItemSchema = z.object({
+  id: z.number(),
+  brand: z.string(),
+  model: z.string(),
+  price: z.number(),
+  image: z.string().optional(),
+  quantity: z.number().min(1)
+});
+
+export type CartItem = z.infer<typeof cartItemSchema>;
+
+// File upload schema
+export const fileUploadSchema = z.object({
+  users: z.array(insertUserSchema),
+  products: z.array(insertProductSchema)
+});
+
+export type FileUpload = z.infer<typeof fileUploadSchema>;
+import { User, InsertUser, Product, InsertProduct, Order, InsertOrder, OrderItem, InsertOrderItem } from "../shared/schema";
+
+export interface IStorage {
+  // User operations
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  
+  // Product operations
+  getProduct(id: number): Promise<Product | undefined>;
+  createProduct(product: InsertProduct): Promise<Product>;
+  getAllProducts(): Promise<Product[]>;
+  
+  // Order operations
+  createOrder(order: InsertOrder): Promise<Order>;
+  getOrder(id: number): Promise<Order | undefined>;
+  getUserOrders(userId: number): Promise<Order[]>;
+  
+  // Order Item operations
+  createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
+  getOrderItems(orderId: number): Promise<OrderItem[]>;
+  
+  // Batch operations for file upload
+  createManyUsers(users: InsertUser[]): Promise<User[]>;
+  createManyProducts(products: InsertProduct[]): Promise<Product[]>;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private products: Map<number, Product>;
+  private orders: Map<number, Order>;
+  private orderItems: Map<number, OrderItem>;
+  private userCurrentId: number;
+  private productCurrentId: number;
+  private orderCurrentId: number;
+  private orderItemCurrentId: number;
+
+  constructor() {
+    this.users = new Map();
+    this.products = new Map();
+    this.orders = new Map();
+    this.orderItems = new Map();
+    this.userCurrentId = 1;
+    this.productCurrentId = 1;
+    this.orderCurrentId = 1;
+    this.orderItemCurrentId = 1;
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    for (const user of this.users.values()) {
+      if (user.username === username) {
+        return user;
+      }
+    }
+    return undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.userCurrentId++;
+    const createdAt = new Date();
+    const user: User = { ...insertUser, id, createdAt };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async getProduct(id: number): Promise<Product | undefined> {
+    return this.products.get(id);
+  }
+
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const id = this.productCurrentId++;
+    const createdAt = new Date();
+    const product: Product = { ...insertProduct, id, createdAt };
+    this.products.set(id, product);
+    return product;
+  }
+
+  async getAllProducts(): Promise<Product[]> {
+    return Array.from(this.products.values());
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const id = this.orderCurrentId++;
+    const createdAt = new Date();
+    const order: Order = { ...insertOrder, id, createdAt };
+    this.orders.set(id, order);
+    return order;
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async getUserOrders(userId: number): Promise<Order[]> {
+    return Array.from(this.orders.values()).filter(order => order.userId === userId);
+  }
+
+  async createOrderItem(insertOrderItem: InsertOrderItem): Promise<OrderItem> {
+    const id = this.orderItemCurrentId++;
+    const createdAt = new Date();
+    const orderItem: OrderItem = { ...insertOrderItem, id, createdAt };
+    this.orderItems.set(id, orderItem);
+    return orderItem;
+  }
+
+  async getOrderItems(orderId: number): Promise<OrderItem[]> {
+    return Array.from(this.orderItems.values()).filter(item => item.orderId === orderId);
+  }
+
+  async createManyUsers(users: InsertUser[]): Promise<User[]> {
+    const createdUsers: User[] = [];
+    for (const user of users) {
+      const createdUser = await this.createUser(user);
+      createdUsers.push(createdUser);
+    }
+    return createdUsers;
+  }
+
+  async createManyProducts(products: InsertProduct[]): Promise<Product[]> {
+    const createdProducts: Product[] = [];
+    for (const product of products) {
+      const createdProduct = await this.createProduct(product);
+      createdProducts.push(createdProduct);
+    }
+    return createdProducts;
+  }
+}
+
+export const storage = new MemStorage();
+import { Express, Request, Response } from "express";
+import { Server } from "http";
+import multer from "multer";
+import { storage } from "./storage";
+import { fileUploadSchema, cartItemSchema, insertOrderSchema, orderItems } from "../shared/schema";
+import { z } from "zod";
+
+// Configure multer for file uploads
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // File upload endpoint
+  app.post('/api/upload', upload.single('file'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      // Parse the uploaded JSON file
+      const fileContent = req.file.buffer.toString('utf-8');
+      const data = JSON.parse(fileContent);
+
+      // Validate against the schema
+      const validatedData = fileUploadSchema.parse(data);
+
+      // Store the data
+      const users = await storage.createManyUsers(validatedData.users);
+      const products = await storage.createManyProducts(validatedData.products);
+
+      // Return the first user as the "logged in" user (for demo purposes)
+      const currentUser = users[0];
+      const { password, ...userWithoutPassword } = currentUser;
+
+      res.status(201).json({ 
+        message: 'File uploaded successfully',
+        user: userWithoutPassword,
+        stats: {
+          usersLoaded: users.length,
+          productsLoaded: products.length
+        }
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid data format', details: error.errors });
+      }
+      console.error('Upload error:', error);
+      res.status(500).json({ error: 'Failed to process uploaded file' });
+    }
+  });
+
+  // Get all products
+  app.get('/api/products', async (req: Request, res: Response) => {
+    try {
+      const products = await storage.getAllProducts();
+      res.json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Failed to fetch products' });
+    }
+  });
+
+  // Get product by ID
+  app.get('/api/products/:id', async (req: Request, res: Response) => {
+    try {
+      const productId = parseInt(req.params.id);
+      if (isNaN(productId)) {
+        return res.status(400).json({ error: 'Invalid product ID' });
+      }
+      
+      const product = await storage.getProduct(productId);
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      
+      res.json(product);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      res.status(500).json({ error: 'Failed to fetch product' });
+    }
+  });
+
+  // Create order
+  app.post('/api/orders', async (req: Request, res: Response) => {
+    try {
+      // Validate order data
+      const orderData = insertOrderSchema.parse(req.body.order);
+      
+      // Validate cart items
+      const cartItems = z.array(cartItemSchema).parse(req.body.items);
+      
+      // Create the order
+      const order = await storage.createOrder(orderData);
+      
+      // Create order items
+      const createdItems = [];
+      for (const item of cartItems) {
+        const orderItem = await storage.createOrderItem({
+          orderId: order.id,
+          productId: item.id,
+          quantity: item.quantity,
+          price: item.price
+        });
+        createdItems.push(orderItem);
+      }
+      
+      res.status(201).json({ 
+        message: 'Order created successfully',
+        order,
+        items: createdItems
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid order data', details: error.errors });
+      }
+      console.error('Error creating order:', error);
+      res.status(500).json({ error: 'Failed to create order' });
+    }
+  });
+
+  // Get user orders
+  app.get('/api/users/:userId/orders', async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
+      
+      const orders = await storage.getUserOrders(userId);
+      
+      // For each order, fetch the order items
+      const ordersWithItems = await Promise.all(orders.map(async (order) => {
+        const items = await storage.getOrderItems(order.id);
+        return { ...order, items };
+      }));
+      
+      res.json(ordersWithItems);
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
+      res.status(500).json({ error: 'Failed to fetch user orders' });
+    }
+  });
+
+  return app;
+}
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
