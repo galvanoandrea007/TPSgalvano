@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+  <html lang="it">
+  <head>
+<meta charset="UTF-8">
+   <title>Anagrafica 5B</title>
+</head>
+ <body>
+
+   <h2>Anagrafica Utenti Classe 5B</h2>
+
+ <p>
+ Cognomi che iniziano con:
+<input type="text" id="lettera" maxlength="1">
+<button onclick="filtra()">Filtra</button>
+<button onclick="maggiorenni()">Mostra maggiorenni</button>
+</p>
+
+<p>
+Inserisci data di nascita:
+<input type="date" id="data">
+<button onclick="generazione()">Calcola generazione</button>
+</p>
+
+<p id="risultato"></p>
+
+<table border="1" id="tabella">
+<tr><th>Nome</th><th>Cognome</th><th>Data di nascita</th><th>Età</th></tr>
+</table>
+
+<script>
+var utenti = [
+   {nome:"Luca", cognome:"Rossi", data:"2006-04-10"},
+ {nome:"Anna", cognome:"Verdi", data:"2004-07-10"},
+  {nome:"Marco", cognome:"Bianchi", data:"2003-12-25"},
+    {nome:"Katerina", cognome:"Kim", data:"2000-05-05"},
+ {nome:"Paolo", cognome:"Kristo", data:"2001-11-22"},
+   {nome:"Giulia", cognome:"Zanetti", data:"2010-03-08"}
+];
+
+ function eta(data){
+   let oggi=new Date();
+  let nasc=new Date(data);
+  let anni=oggi.getFullYear()-nasc.getFullYear();
+  let m=oggi.getMonth()-nasc.getMonth();
+   if(m<0||(m==0&&oggi.getDate()<nasc.getDate())) anni--;
+ return anni;
+}
+
+  function mostra(lista){
+ let tab=document.getElementById("tabella");
+       tab.innerHTML="<tr><th>Nome</th><th>Cognome</th><th>Data di nascita</th><th>Età</th></tr>";
+ for(let i=0;i<lista.length;i++){
+     let riga=tab.insertRow(-1);
+   riga.insertCell(0).innerHTML=lista[i].nome;
+      riga.insertCell(1).innerHTML=lista[i].cognome;
+     riga.insertCell(2).innerHTML=lista[i].data;
+    riga.insertCell(3).innerHTML=eta(lista[i].data);
+ }
+}
+
+function filtra(){
+ let l=document.getElementById("lettera").value.toUpperCase();
+ let nuovo=[];
+ for(let i=0;i<utenti.length;i++){
+   if(utenti[i].cognome.charAt(0).toUpperCase()==l){nuovo.push(utenti[i]);}
+ }
+ mostra(nuovo);
+}
+
+function maggiorenni(){
+ let m=[];
+ for(let i=0;i<utenti.length;i++){
+   if(eta(utenti[i].data)>=18){m.push(utenti[i]);}
+ }
+ mostra(m);
+}
+
+function generazione(){
+ let d=document.getElementById("data").value;
+ if(d==""){document.getElementById("risultato").innerHTML="Inserisci una data";}
+ else{
+   let a=new Date(d).getFullYear();
+   let g="";
+           if(a>=2013) g="Generazione Alpha";
+      else if(a>=1997) g="Generazione Z";
+   else if(a>=1981) g="Millennials";
+     else if(a>=1965) g="Generazione X";
+       else if(a>=1946) g="Baby Boomers";
+   else if(a>=1928) g="Generazione Silenziosa";
+               else g="Greatest Generation";
+         document.getElementById("risultato").innerHTML="Appartiene alla "+g;
+ }
+}
+
+     mostra(utenti);
+</script>
+    </body>
+</html>
