@@ -7,12 +7,13 @@
 body{
   font-family:"Trebuchet MS",sans-serif;
   text-align:center;
-  margin-top:100px;
   background-color:#e9ecf1;
 }
+
 p{
   font-size:22px;
 }
+
 button{
   padding:15px 32px;
   font-size:18px;
@@ -23,29 +24,35 @@ button{
   color:white;
   cursor:pointer;
 }
+
 button:hover{
   background-color:#4957a3;
 }
+
 .sezione{
   display:none;
   font-family:"Segoe UI",Arial,sans-serif;
   background-color:#f4f6f8;
-  margin:40px;
+  padding-top:40px;
 }
+
 table{
   margin:20px auto;
   border-collapse:collapse;
   width:80%;
   background:white;
 }
+
 th,td{
   border:1px solid #ddd;
   padding:10px;
 }
+
 .torna{
   background-color:#0078d7;
-  padding:8px 16px;
-  border-radius:5px;
+  font-size:14px;
+  padding:8px 20px;
+  margin-bottom:20px;
 }
 </style>
 </head>
@@ -59,7 +66,8 @@ th,td{
 </div>
 
 <div id="json" class="sezione">
-<button class="torna" onclick="mostraHome()">Torna alla Home</button><br>
+<button class="torna" onclick="mostraHome()">Torna alla Home</button>
+<br>
 <input type="file" id="fileJSON" accept=".json">
 <button onclick="leggiJSON()">Carica persone.json</button>
 <h1>Elenco Persone</h1>
@@ -74,7 +82,8 @@ th,td{
 </div>
 
 <div id="xml" class="sezione">
-<button class="torna" onclick="mostraHome()">Torna alla Home</button><br>
+<button class="torna" onclick="mostraHome()">Torna alla Home</button>
+<br>
 <input type="file" id="fileXML" accept=".xml">
 <button onclick="leggiXML()">Carica persone.xml</button>
 <h1>Elenco Persone</h1>
