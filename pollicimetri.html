@@ -1,0 +1,74 @@
+<?php
+// Controlliamo se la richiesta è di tipo SOAP (POST) o se è una normale richiesta HTTP
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Se è una richiesta da client, eseguiamo la parte di client
+    if (isset($_POST['value']) && !empty($_POST['value'])) {
+        // URL del WSDL (server SOAP)
+        $wsdl_url = "http://localhost:8080/soap_service.php?wsdl";  // Cambia con l'URL corretto del tuo server
+        
+        $value = $_POST['value'];
+        $unit = $_POST['unit'];
+
+        try {
+            // Creiamo il client SOAP
+            $client = new SoapClient($wsdl_url, array("location" => "http://localhost:8080/soap_service.php"));
+            
+            // Eseguiamo la conversione in base all'unità scelta
+            if ($unit == 'meters') {
+                // Converti da metri a pollici
+                $result = $client->convertToInches($value);
+                echo "<h3>Risultato: $value metri = $result pollici</h3>";
+            } elseif ($unit == 'inches') {
+                // Converti da pollici a metri
+                $result = $client->convertToMeters($value);
+                echo "<h3>Risultato: $value pollici = $result metri</h3>";
+            }
+        } catch (Exception $e) {
+            echo "Errore nel servizio SOAP: " . $e->getMessage();
+        }
+    }
+} else {
+    // Se la richiesta è di tipo GET o altre, avvia il server SOAP
+
+    // Funzione per convertire metri in pollici
+    function convertToInches($meters) {
+        return $meters * 39.3701;  // Conversione da metri a pollici
+    }
+
+    // Funzione per convertire pollici in metri
+    function convertToMeters($inches) {
+        return $inches / 39.3701;  // Conversione da pollici a metri
+    }
+
+    // Definizione del server SOAP
+    $server = new SoapServer(null, array('uri' => "http://localhost:8080/soap_service.php"));
+
+    // Aggiungiamo le funzioni al server
+    $server->addFunction("convertToInches");
+    $server->addFunction("convertToMeters");
+
+    // Gestiamo le richieste SOAP
+    $server->handle();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Test SOAP - Conversione Metri/Pollici</title>
+</head>
+<body>
+    <h2>Convertitore Metri <-> Pollici</h2>
+    <form method="POST" action="">
+        <label for="value">Valore:</label>
+        <input type="text" id="value" name="value" required/>
+        <label for="unit">Unità di misura:</label>
+        <select name="unit" id="unit">
+            <option value="meters">Metri a Pollici</option>
+            <option value="inches">Pollici a Metri</option>
+        </select>
+        <input type="submit" value="Converti"/>
+    </form>
+</body>
+</html>
